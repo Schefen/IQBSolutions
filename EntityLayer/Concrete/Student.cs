@@ -15,8 +15,8 @@ namespace EntityLayer.Concrete
         public string Full_Name { get; set; }
         [StringLength(20)]
         public string Number { get; set; }
-        [StringLength(3)]
-        public string Age { get; set; }
+        [StringLength(100)]
+        public string Email { get; set; }
         [StringLength(30)]
         public string Gsm_Number { get; set; }
     }

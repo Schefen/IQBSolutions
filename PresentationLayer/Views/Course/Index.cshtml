@@ -1,0 +1,35 @@
+﻿@using EntityLayer.Concrete
+@model List<Course>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="col-lg-12 grid-margin stretch-card" id="tabl">
+    <h2>Course Records</h2>
+    <div class="table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Delete</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td><a href="/Course/DeleteCourse/@item.Id" class="btn btn-outline-danger">Delete</a></td>
+                        <td><a href="/Course/EditCourse/@item.Id" class="btn btn-outline-warning">Edit</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a href="/Course/AddCourse/" class="btn btn-outline-info" id="btngotoaddcourse">Add new course</a>
+    </div>
+</div>
+

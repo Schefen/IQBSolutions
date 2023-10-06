@@ -1,0 +1,23 @@
+﻿@model EntityLayer.Concrete.Course
+@{
+    ViewData["Title"] = "EditCourse";
+    Layout = "~/Views/Shared/_DefaultLayout.cshtml";
+}
+
+@using (Html.BeginForm("EditCourse", "Course", FormMethod.Post))
+{
+    <div class="container">
+        <h2>Edit Course Record</h2>
+        <form class="forms-sample">
+            <div class="form-group">
+                @Html.HiddenFor(x=>x.Id)
+                <label>Full Name :</label>
+                @Html.TextBoxFor(x=>x.Name, new {@class = "form-control"})
+                @Html.ValidationMessageFor(x=>x.Name)
+            </div>          
+            <button type="submit" class="btn btn-outline-info" id="btneditcourse">Edit</button>
+            <a href="/Course/Index/" class="btn btn-outline-warning">Back</a>
+        </form>
+    </div>
+}
+

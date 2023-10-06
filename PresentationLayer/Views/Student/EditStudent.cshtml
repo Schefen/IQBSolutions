@@ -1,0 +1,38 @@
+﻿@model EntityLayer.Concrete.Student
+@{
+    ViewData["Title"] = "EditStudent";
+    Layout = "~/Views/Shared/_DefaultLayout.cshtml";
+}
+
+@using (Html.BeginForm("EditStudent", "Student", FormMethod.Post))
+{
+    <div class="container">
+        <h2>Edit Student Record</h2>
+        <form class="forms-sample">
+            <div class="form-group">
+                @Html.HiddenFor(x=>x.Id)
+                <label>Full Name :</label>
+                @Html.TextBoxFor(x=>x.Full_Name, new {@class = "form-control"})
+                @Html.ValidationMessageFor(x=>x.Full_Name)
+            </div>
+            <div class="form-group">
+                <label>Number :</label>
+                @Html.TextBoxFor(x=>x.Number, new {@class = "form-control"})
+                @Html.ValidationMessageFor(x=>x.Number)
+            </div>
+            <div class="form-group">
+                <label>Email :</label>
+                @Html.TextBoxFor(x=>x.Email, new {@class = "form-control"})
+                @Html.ValidationMessageFor(x=>x.Email)
+            </div>
+            <div class="form-group">
+                <label>Gsm Number :</label>
+                @Html.TextBoxFor(x=>x.Gsm_Number, new {@class = "form-control"})
+                @Html.ValidationMessageFor(x=>x.Gsm_Number)
+            </div>
+            <button type="submit" class="btn btn-outline-info" id="btnaddstudent">Edit</button>
+            <a href="/Student/Index/" class="btn btn-outline-warning">Back</a>
+        </form>
+    </div>
+}
+
