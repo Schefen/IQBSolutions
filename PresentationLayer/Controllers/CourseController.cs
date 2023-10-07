@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -10,10 +11,18 @@ namespace PresentationLayer.Controllers
     public class CourseController : Controller
     {
         CourseManager _courseManager = new CourseManager(new EfCourseDal());
-        public IActionResult Index()
+        public IActionResult Index(string SearchString)
         {
-            var values = _courseManager.TGetList();
-            return View(values);
+            using var c = new Context();
+            var query = c.Courses.AsQueryable();
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                query = query.Where(x =>
+                x.Name.Contains(SearchString));
+            }
+            var results = query.ToList();
+            return View(results);
         }
         [HttpGet]
         public IActionResult AddCourse() 

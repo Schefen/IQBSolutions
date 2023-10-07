@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -10,10 +11,21 @@ namespace PresentationLayer.Controllers
     public class StudentController : Controller
     {
         StudentManager _studentManager = new StudentManager(new EfStudentDal());
-        public IActionResult Index()
+        public IActionResult Index(string SearchString)
         {
-            var values = _studentManager.TGetList();
-            return View(values);
+            using var c = new Context();
+            var query = c.Students.AsQueryable();
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                query = query.Where(x =>
+                x.Full_Name.Contains(SearchString) ||
+                x.Number.Contains(SearchString) ||
+                x.Email.Contains(SearchString) ||
+                x.Gsm_Number.Contains(SearchString));
+            }
+            var results = query.ToList();
+            return View(results);
         }
         [HttpGet]
         public IActionResult AddStudent()
@@ -69,6 +81,17 @@ namespace PresentationLayer.Controllers
                     ModelState.AddModelError(item.PropertyName,item.ErrorMessage);
                 }
             }
+            return View();
+        }
+        [HttpGet]
+        public IActionResult StudentDetails(int id)
+        {
+            Student student = _studentManager.TGetById(id);
+            return View(student);
+        }
+        [HttpPost]
+        public IActionResult StudentDetails(Student student)
+        {
             return View();
         }
     }
