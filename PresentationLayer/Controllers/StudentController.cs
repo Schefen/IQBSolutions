@@ -5,12 +5,15 @@ using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace PresentationLayer.Controllers
 {
     public class StudentController : Controller
     {
         StudentManager _studentManager = new StudentManager(new EfStudentDal());
+
         public IActionResult Index(string SearchString)
         {
             using var c = new Context();
@@ -55,7 +58,7 @@ namespace PresentationLayer.Controllers
         {
             var value = _studentManager.TGetById(id);
             _studentManager.TDelete(value);
-            return RedirectToAction("Index","Student");
+            return RedirectToAction("Index", "Student");
         }
 
         [HttpGet]
@@ -78,21 +81,34 @@ namespace PresentationLayer.Controllers
             {
                 foreach (var item in results.Errors)
                 {
-                    ModelState.AddModelError(item.PropertyName,item.ErrorMessage);
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
             }
             return View();
         }
-        [HttpGet]
+        //[HttpGet]
+        //public IActionResult StudentDetails(int id)
+        //{
+        //    using var c = new Context();
+        //    var customersAndOrders = c.ExamResults
+        //        .Include(x => x.Student)
+        //        .Include(x => x.Course)
+        //        .Where(x => x.Student.Id == id)
+        //        .ToList();
+        //    return View(customersAndOrders);
+        //}
         public IActionResult StudentDetails(int id)
         {
-            Student student = _studentManager.TGetById(id);
-            return View(student);
-        }
-        [HttpPost]
-        public IActionResult StudentDetails(Student student)
-        {
-            return View();
+            using var c = new Context();
+            var customersAndOrders = c.ExamResults
+                .Include(x => x.Student)
+                .Include(x => x.Course)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (customersAndOrders != null)
+            {
+                int nonNullScore = customersAndOrders.
+            }
+            return View(customersAndOrders);
         }
     }
 }
