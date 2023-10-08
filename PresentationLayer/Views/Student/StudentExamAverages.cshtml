@@ -1,33 +1,37 @@
-﻿@using EntityLayer.Concrete
-@model List<ExamResult>
+﻿@model List<Tuple<string, double>>
+
 @{
-    ViewData["Title"] = "StudentDetails";
+    ViewData["Title"] = "StudentExamAverages";
     Layout = "~/Views/Shared/_DefaultLayout.cshtml";
 }
 
 <div class="col-lg-12 grid-margin stretch-card" id="tabl">
-    <h2>Exam Records of Student</h2>
+    <h2>Average Scores of Student</h2>
     <div class="table">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Full Name</th>
                     <th>Course Name</th>
-                    <th>Exam</th>
+                    <th>Average</th>
+
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
+                        <td>@item.Item1</td>
                         <td>
-                            @item.Student.Full_Name
-                        </td>
-                        <td>
-                            @item.Course.Name
-                        </td>
-                        <td>
-                            @item.Score
+                            @{
+                                if (!double.IsNaN(item.Item2))
+                                {
+                                    <p>@item.Item2.ToString("0.##")</p>
+                                }
+                                else
+                                {
+                                    <p>Not Yok</p>
+                                }
+                            }
                         </td>
                     </tr>
                 }
@@ -36,5 +40,4 @@
         <a href="/Student/Index/" class="btn btn-outline-warning" id="btngotoaddrecord">Back</a>
     </div>
 </div>
-
 

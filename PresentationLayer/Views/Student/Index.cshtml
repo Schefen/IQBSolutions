@@ -8,48 +8,53 @@
     <h2>Student Records</h2>
     <form method="get" asp-action="Index">
         <div class="form-group">
-            <input type="text" class="form-control" name="SearchString" placeholder="SearchText" />
+            <input type="text" class="form-control" name="SearchString" placeholder="Search" />
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
-        <div class="table">
-            <table class="table">
-                <thead>
+    <div class="table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Number</th> 
+                    <th>Email</th>
+                    <th>Gsm Number</th>
+                    <th>Delete</th>
+                    <th>Edit</th>
+                    <th>All Exam Details</th>
+                    <th>Averages</th>
+                    <th>Add Score</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
                     <tr>
-                        <th>Full Name</th>
-                        <th>Number</th>
-                        <th>Email</th>
-                        <th>Gsm Number</th>
-                        <th>Delete</th>
-                        <th>Edit</th>
-                        <th>Details</th>
+                        <td>
+                            @item.Full_Name
+                        </td>
+                        <td>
+                            @item.Number
+                        </td>
+                        <td>
+                            @item.Email
+                        </td>
+                        <td>
+                            @item.Gsm_Number
+                        </td>
+                        <td><a href="/Student/DeleteStudent/@item.Id/" class="btn btn-outline-danger">Delete</a></td>
+                        <td><a href="/Student/EditStudent/@item.Id/" class="btn btn-outline-warning">Edit</a></td>
+                        <td><a href="/Student/StudentDetails/@item.Id/" class="btn btn-outline-info">Details</a></td>
+                        <td><a href="/Student/StudentExamAverages/@item.Id/" class="btn btn-outline-success">Averages</a></td>
+                        <td><a href="/Student/StudentScoreAdd/@item.Id/" class="btn btn-outline-primary">Add</a></td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @item.Full_Name
-                            </td>
-                            <td>
-                                @item.Number
-                            </td>
-                            <td>
-                                @item.Email
-                            </td>
-                            <td>
-                                @item.Gsm_Number
-                            </td>
-                            <td><a href="/Student/DeleteStudent/@item.Id" class="btn btn-outline-danger">Delete</a></td>
-                            <td><a href="/Student/EditStudent/@item.Id" class="btn btn-outline-warning">Edit</a></td>
-                            <td><a href="/Student/StudentDetails/@item.Id" class="btn btn-outline-info">Details</a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <a href="/Student/AddStudent/" class="btn btn-outline-info" id="btngotoaddrecord">Add new record</a>
-        </div>
+                }
+            </tbody>
+        </table>
+        <a href="/Student/AddStudent/" class="btn btn-outline-info" id="btngotoaddrecord">Add new record</a>
+    </div>
 </div>
 
 

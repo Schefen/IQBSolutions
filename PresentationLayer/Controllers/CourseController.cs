@@ -54,13 +54,13 @@ namespace PresentationLayer.Controllers
             _courseManager.TDelete(value);
             return RedirectToAction("Index","Course");
         }
-        [HttpGet]
+        [HttpGet("/Course/EditCourse/{id}")]
         public IActionResult EditCourse(int id)
         {
             var value = _courseManager.TGetById(id);
             return View(value);
         }
-        [HttpPost]
+        [HttpPost("/Course/EditCourse/{id}")]
         public IActionResult EditCourse(Course course)
         {
             CourseValidator validationRules = new CourseValidator();

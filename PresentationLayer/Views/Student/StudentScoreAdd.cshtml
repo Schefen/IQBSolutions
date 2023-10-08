@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "StudentScoreAdd";
+    Layout = "~/Views/Shared/_DefaultLayout.cshtml";
+}
+
+@model ExamResultViewModel
+
+<h2>Add Score for Student</h2>
+<form asp-action="StudentScoreAdd" method="post" id="studentscoreact">
+    <div class="form-group">
+        <input type="hidden" class="form-control" asp-for="StudentId">
+    </div>
+    <div class="form-group">
+        <label for="CourseId">Course Name</label>
+        @Html.DropDownList("CourseId", ViewBag.CourseList as SelectList, "Select Course", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label for="Score">Score</label>
+        <input type="text" class="form-control" asp-for="Score">
+        <span asp-validation-for="Score" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@*<h2>Add Score for Student</h2>
+<form asp-action="StudentScoreAdd" method="post" id="studentscoreact">
+    <div class="form-group">
+        <label for="StudentId">Öğrenci ID</label>
+        <input type="text" class="form-control" asp-for="StudentId">
+    </div>
+    <div class="form-group">
+        <label for="CourseId">Ders</label>
+        @Html.DropDownList("CourseId", ViewBag.CourseList as SelectList, "Ders Seçiniz", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label for="Score">Not</label>
+        <input type="text" class="form-control" asp-for="Score">
+        <span asp-validation-for="Score" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>*@
+
+

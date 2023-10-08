@@ -5,7 +5,10 @@ using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PresentationLayer.Models;
 using System.Linq;
 
 namespace PresentationLayer.Controllers
@@ -13,7 +16,6 @@ namespace PresentationLayer.Controllers
     public class StudentController : Controller
     {
         StudentManager _studentManager = new StudentManager(new EfStudentDal());
-
         public IActionResult Index(string SearchString)
         {
             using var c = new Context();
@@ -61,13 +63,13 @@ namespace PresentationLayer.Controllers
             return RedirectToAction("Index", "Student");
         }
 
-        [HttpGet]
+        [HttpGet("/Student/EditStudent/{id}")]
         public IActionResult EditStudent(int id)
         {
             var value = _studentManager.TGetById(id);
             return View(value);
         }
-        [HttpPost]
+        [HttpPost("/Student/EditStudent/{id}")]
         public IActionResult EditStudent(Student student)
         {
             StudentValidator validationRules = new StudentValidator();
@@ -86,29 +88,75 @@ namespace PresentationLayer.Controllers
             }
             return View();
         }
-        //[HttpGet]
-        //public IActionResult StudentDetails(int id)
-        //{
-        //    using var c = new Context();
-        //    var customersAndOrders = c.ExamResults
-        //        .Include(x => x.Student)
-        //        .Include(x => x.Course)
-        //        .Where(x => x.Student.Id == id)
-        //        .ToList();
-        //    return View(customersAndOrders);
-        //}
         public IActionResult StudentDetails(int id)
         {
             using var c = new Context();
-            var customersAndOrders = c.ExamResults
+            var studentsAndExams = c.ExamResults
                 .Include(x => x.Student)
                 .Include(x => x.Course)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (customersAndOrders != null)
-            {
-                int nonNullScore = customersAndOrders.
-            }
-            return View(customersAndOrders);
+                .Where(x => x.Student.Id == id)
+                .ToList();
+            return View(studentsAndExams);
         }
+
+        [HttpGet("/Student/StudentExamAverages/{studentNumber}/")]
+        public IActionResult StudentExamAverages(int studentNumber)
+        {
+            using var c = new Context();
+            var courses = c.Courses.ToList();
+
+            var model = new List<Tuple<string, double>>();
+
+            foreach (var course in courses)
+            {
+                int numberOfScores = c.ExamResults
+            .Where(er => er.Student.Id == studentNumber && er.Course.Id == course.Id)
+            .Count();
+                if (numberOfScores >= 3)
+                {
+                    double average = c.ExamResults
+                        .Where(er => er.Student.Id == studentNumber && er.Course.Id == course.Id)
+                        .Average(er => er.Score);
+
+                    model.Add(new Tuple<string, double>(course.Name, average));
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet("/Student/StudentScoreAdd/{studentNumber}/")]
+        public IActionResult StudentScoreAdd(int studentNumber)
+        {
+            using var c = new Context();
+            var courses = c.Courses.ToList();
+
+            SelectList courseList = new SelectList(courses, "Id", "Name");
+
+            ViewBag.CourseList = courseList;
+
+            return View();
+        }
+
+
+        [HttpPost("/Student/StudentScoreAdd/{studentNumber}/")]
+        public IActionResult StudentScoreAdd(int studentNumber, ExamResultViewModel model)
+        {
+            using var c = new Context();
+            model.StudentId = studentNumber;
+
+
+            var newExamResult = new ExamResult
+            {
+                StudentId = model.StudentId,
+                CourseId = model.CourseId,
+                Score = model.Score
+            };
+
+            c.ExamResults.Add(newExamResult);
+            c.SaveChanges();
+
+            return RedirectToAction("Index", "Student");
+        }
+
     }
 }
